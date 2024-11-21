@@ -13,7 +13,7 @@ import { Registration } from './components/Auth/Registration.jsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Login />} />
       <Route path="/register" element={<Registration />} />
       <Route path="/adminDashboard" element={<AdminDashboard />} />
       <Route path="/employeeDashboard" element={<EmployeeDashboard />} />

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
 import { AuthContext } from '../../context/AuthProvider';
@@ -7,6 +7,27 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 
 const Login = () => {
+
+    useEffect(() => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            const decode = jwtDecode(token);
+            const userId = decoded.userId;
+            fetch(`${backendUrl}/userdetails/${userId}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    setUserData(data);
+                    if (data.user.role == "admin") navigate('/adminDashboard');
+                    if (data.user.role == "employee") navigate('/employeeDashboard');
+                })
+        }
+    }, [])
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -37,7 +58,7 @@ const Login = () => {
                     })
                         .then((res) => res.json())
                         .then((data) => {
-                            setUserData(data);                            
+                            setUserData(data);
                             if (data.user.role == "admin") navigate('/adminDashboard');
                             if (data.user.role == "employee") navigate('/employeeDashboard');
                         })

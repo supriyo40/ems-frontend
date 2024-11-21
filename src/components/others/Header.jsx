@@ -11,7 +11,7 @@ const Header = () => {
 
   const logoutUser = ()=>{
     localStorage.removeItem('authToken');
-    navigate('/login');
+    navigate('/');
   }
   
   return (
