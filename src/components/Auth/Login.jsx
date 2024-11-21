@@ -12,7 +12,7 @@ const Login = () => {
         const token = localStorage.getItem('authToken');
         if (token) {
             const decode = jwtDecode(token);
-            const userId = decoded.userId;
+            const userId = decode.userId;
             fetch(`${backendUrl}/userdetails/${userId}`, {
                 method: "GET",
                 headers: {
