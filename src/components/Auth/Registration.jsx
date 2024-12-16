@@ -42,7 +42,13 @@ export const Registration = () => {
       body: JSON.stringify(formData),
     })
     .then((res)=> res.json())
-    .then((data)=> localStorage.setItem('authToken',data.token));
+    .then((data)=> {
+      localStorage.setItem('authToken',data.token);
+      setMessage('Registration successful!');
+    })
+    .catch((error)=> {
+      setMessage(error.message || 'Registration failed!');
+    })
 
     // Clear the form
     setFormData({

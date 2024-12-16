@@ -1,38 +1,24 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
-import { AuthContext } from '../../context/AuthProvider';
+import { useAuth } from '../../hooks/useAuth';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-
 const Login = () => {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const navigate = useNavigate();
+    const { setUserData, getUserData } = useAuth();
 
     useEffect(() => {
         const token = localStorage.getItem('authToken');
-        if (token) {
-            const decode = jwtDecode(token);
-            const userId = decode.userId;
-            fetch(`${backendUrl}/userdetails/${userId}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    setUserData(data);
-                    if (data.user.role == "admin") navigate('/adminDashboard');
-                    if (data.user.role == "employee") navigate('/employeeDashboard');
-                })
+        const userData = getUserData();
+        if (token && userData) {
+            if (userData.user.role === "admin") navigate('/adminDashboard');
+            if (userData.user.role === "employee") navigate('/employeeDashboard');
         }
-    }, [])
-
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-
-    const { setUserData } = useContext(AuthContext);
-    const navigate = useNavigate();
+    }, []);
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -47,7 +33,7 @@ const Login = () => {
             .then((data) => {
                 const token = data.token;
                 if (token) {
-                    localStorage.setItem('authToken', data.token)
+                    localStorage.setItem('authToken', token);
                     const decoded = jwtDecode(token);
                     const userId = decoded.userId;
                     fetch(`${backendUrl}/userdetails/${userId}`, {
@@ -59,10 +45,16 @@ const Login = () => {
                         .then((res) => res.json())
                         .then((data) => {
                             setUserData(data);
-                            if (data.user.role == "admin") navigate('/adminDashboard');
-                            if (data.user.role == "employee") navigate('/employeeDashboard');
+                            if (data.user.role === "admin") navigate('/adminDashboard');
+                            if (data.user.role === "employee") navigate('/employeeDashboard');
                         })
+                        .catch((error) => {
+                            console.error('Failed to fetch user details:', error);
+                        });
                 }
+            })
+            .catch((error) => {
+                console.error('Login failed:', error);
             });
         setUsername("");
         setPassword("");

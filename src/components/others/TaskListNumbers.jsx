@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { AuthContext } from '../../context/AuthProvider'
+import React, {useEffect, useState } from 'react'
+import { useAuth } from '../../hooks/useAuth';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -10,12 +10,13 @@ const TaskListNumbers = () => {
         failedTask: 0,
         completedTask: 0,
     });
-    const { user } = useContext(AuthContext);
+    const { getUserData } = useAuth();
+    const userData = getUserData();
     
     useEffect(() => {
-        console.log(user);
+        if (!userData?.user?._id) return;
         
-        fetch(`${backendUrl}/taskcount/${user.user._id}`, {
+        fetch(`${backendUrl}/taskcount/${userData.user._id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -25,7 +26,10 @@ const TaskListNumbers = () => {
             .then((data) => {
                 setTaskCount(data.data);
             })
-    }, [user])
+            .catch((error) => {
+                console.error('Failed to fetch task counts:', error);
+            });
+    }, [userData?.user?._id])
 
     return (
         <div className='p-2 flex mt-5 justify-between gap-5 screen'>
