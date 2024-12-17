@@ -1,7 +1,9 @@
 import React from 'react'
+import { useTaskUpdate } from '../../context/TaskContext';
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const AcceptTask = ({ task }) => {
+    const { triggerTaskUpdate } = useTaskUpdate();
     const dateString = task.taskDate;
     const date = new Date(dateString);
 
@@ -16,7 +18,7 @@ const AcceptTask = ({ task }) => {
             .then((res) => res.json())
             .then((data) => {
                 console.log(data.message);
-
+                triggerTaskUpdate();
             })
     }
   const statusChangeToCompleted = ()=>{
@@ -29,7 +31,7 @@ const AcceptTask = ({ task }) => {
     .then((res)=>res.json())
     .then((data)=>{
       console.log(data.message);
-      
+      triggerTaskUpdate();
     })
   }
     return (

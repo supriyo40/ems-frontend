@@ -1,8 +1,9 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import AuthProvider from './context/AuthProvider.jsx';
-import { TaskProvider } from './context/TaskContext';
+
+// import AuthProvider from './context/AuthProvider.jsx';
+import { TaskProvider } from './context/TaskContext.jsx';
 import React from 'react';
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
@@ -24,10 +25,10 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
+    {/* <AuthProvider> */}
       <TaskProvider>
         <RouterProvider router={router} />
       </TaskProvider>
-    </AuthProvider>
+    {/* </AuthProvider> */}
   </StrictMode>,
 );

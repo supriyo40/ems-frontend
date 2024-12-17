@@ -1,9 +1,11 @@
 import React from 'react'
+import { useTaskUpdate } from '../../context/TaskContext';
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const NewTask = ({task}) => {
   const dateString = task.taskDate;
   const date = new Date(dateString);
+  const { triggerTaskUpdate } = useTaskUpdate();
   const taskId = task._id;
   const statusChange = ()=>{
     fetch(`${backendUrl}/activetask/${taskId}`,{
@@ -15,7 +17,7 @@ const NewTask = ({task}) => {
     .then((res)=>res.json())
     .then((data)=>{
       console.log(data.message);
-      
+      triggerTaskUpdate();
     })
   }
   return (
