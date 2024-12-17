@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
+import { useTaskUpdate } from '../../context/TaskContext';
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const AllTask = () => {
   const [taskData, setTaskData] = useState([]);
+  const { taskUpdate } = useTaskUpdate();
+
   useEffect(() => {
     fetch(`${backendUrl}/alltasks`, {
       method: "GET",
@@ -14,7 +17,10 @@ const AllTask = () => {
       .then((data) => {
         setTaskData(data.data);
       })
-  }, [])
+      .catch((error) => {
+        console.error('Failed to fetch all tasks:', error);
+      });
+  }, [taskUpdate])
 
 
 

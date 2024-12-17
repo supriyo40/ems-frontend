@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react'
+/*import React, { createContext, useState } from 'react'
 
 
 export const AuthContext = createContext();
@@ -9,6 +9,7 @@ const AuthProvider = ({children}) => {
   const setUserData = (data) =>{
     setUser(data);
   }
+*/
 
 // const [userData, setUserData] = useState(()=>{
 //   const {employees, admin} = getLocalStorage();
@@ -25,7 +26,7 @@ const AuthProvider = ({children}) => {
   
 // },[userData])
 
-
+/*
   return (
     <AuthContext.Provider value={{user, setUserData}}>
       {children}
@@ -34,3 +35,4 @@ const AuthProvider = ({children}) => {
 }
 
 export default AuthProvider;
+*/

@@ -1,5 +1,6 @@
 import React, {useEffect, useState } from 'react'
 import { useAuth } from '../../hooks/useAuth';
+import { useTaskUpdate } from '../../context/TaskContext';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -11,6 +12,7 @@ const TaskListNumbers = () => {
         completedTask: 0,
     });
     const { getUserData } = useAuth();
+    const { taskUpdate } = useTaskUpdate();
     const userData = getUserData();
     
     useEffect(() => {
@@ -29,7 +31,7 @@ const TaskListNumbers = () => {
             .catch((error) => {
                 console.error('Failed to fetch task counts:', error);
             });
-    }, [userData?.user?._id])
+    }, [userData?.user?._id, taskUpdate])
 
     return (
         <div className='p-2 flex mt-5 justify-between gap-5 screen'>

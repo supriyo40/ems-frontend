@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
+import { useTaskUpdate } from '../../context/TaskContext';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 export const CreateTask = () => {
-    
+    const { triggerTaskUpdate } = useTaskUpdate();
 
     const [taskTitle, setTaskTitle] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
@@ -31,6 +32,7 @@ export const CreateTask = () => {
             .then((data) => {
                 // Handle successful task creation
                 console.log('Task created successfully:', data);
+                triggerTaskUpdate();
             })
 
 

@@ -4,12 +4,15 @@ import NewTask from './NewTask.jsx'
 import CompleteTask from './CompleteTask.jsx'
 import FailedTask from './FailedTask.jsx'
 import { useAuth } from '../../hooks/useAuth';
+import { useTaskUpdate } from '../../context/TaskContext';
+
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const TaskList = () => {
     const [taskList, setTaskList] = useState([]);
     const { getUserData } = useAuth();
     const userData = getUserData();
+    const { taskUpdate } = useTaskUpdate();
 
     useEffect(() => {
         if (!userData?.user?._id) return;
@@ -27,7 +30,7 @@ const TaskList = () => {
         .catch((error) => {
             console.error('Failed to fetch tasks:', error);
         });
-    }, [userData?.user?._id]);
+    }, [userData?.user?._id, taskUpdate]);
 
     return (
         <div id='tasklist' className='h-[270px] overflow-x-auto flex items-center justify-start gap-5 flex-nowrap w-full py-2 mt-10'>
