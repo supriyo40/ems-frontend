@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
 import { useAuth } from '../../hooks/useAuth';
+import Spinner from '../others/spinner.jsx';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const { setUserData, getUserData } = useAuth();
 
@@ -22,6 +24,7 @@ const Login = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
+        setIsLoading(true);
         fetch(`${backendUrl}/login`, {
             method: "POST",
             headers: {
@@ -50,6 +53,9 @@ const Login = () => {
                         })
                         .catch((error) => {
                             console.error('Failed to fetch user details:', error);
+                        })
+                        .finally(() => {
+                            setIsLoading(false);
                         });
                 }
             })
@@ -59,7 +65,8 @@ const Login = () => {
         setUsername("");
         setPassword("");
     }
-    return (
+    if(isLoading) return <Spinner />;
+    else return (
         <div className='flex h-screen w-screen items-center justify-center'>
             <div className='border-2 rounded-xl border-emerald-600 p-20'>
                 <form className='flex flex-col items-center justify-center'
@@ -93,6 +100,7 @@ const Login = () => {
             </div>
         </div>
     )
+    
 }
 
 export default Login

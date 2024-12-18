@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTaskUpdate } from '../../context/TaskContext';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -11,6 +11,7 @@ export const CreateTask = () => {
     const [taskDate, setTaskDate] = useState('');
     const [assignedTo, setAssignedTo] = useState('');
     const [taskCategory, setTaskCategory] = useState('');
+    const [allEmployee, setAllEmployee] = useState([]);
 
     // const data = userData;
 
@@ -43,6 +44,27 @@ export const CreateTask = () => {
         setTaskDescription('');
     }
 
+    const handleSelection = (e) => {
+        setAssignedTo(e.target.value);
+    }
+
+    useEffect(() => {
+        fetch(`${backendUrl}/allemployee`, {
+            method: "GET",
+            headers: {
+                'Content-type': 'application/json',
+            }
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log("all employees", data);
+                setAllEmployee(data.users);
+            })
+            .catch((error) => {
+                console.error('error while fetching employee:', error);
+            })
+    }, [])
+
 
     return (
         <div className='p-5 bg-[#1c1c1c] mt-1 rounded'>
@@ -68,14 +90,25 @@ export const CreateTask = () => {
                             }}
                             className='text-sm py-2 px-3 w-4/5 rounded outline-none bg-transparent border-[1px] border-gray-400 mb-4' type="date" />
                     </div>
-                    <div>
-                        <h3 className='text-sm text-gray-300 mb-0.5'>Assigned to</h3>
-                        <input
+                    <div className="mb-4">
+                        <h3 className='text-sm text-gray-300 mb-0.5'>Assign To</h3>
+                        <select 
                             value={assignedTo}
-                            onChange={(e) => {
-                                setAssignedTo(e.target.value);
-                            }}
-                            className='text-sm py-2 px-3 w-4/5 rounded outline-none bg-transparent border-[1px] border-gray-400 mb-4' type="text" placeholder='employee name' />
+                            onChange={handleSelection}
+                            className="text-sm py-2 px-3 w-4/5 rounded outline-none bg-[#2c2c2c] border-[1px] border-gray-400 
+                            focus:border-emerald-500 cursor-pointer"
+                        >
+                            <option value="" disabled selected>employees</option>
+                            {allEmployee && allEmployee.map((employee, index) => (
+                                <option 
+                                    key={index} 
+                                    value={employee.username}
+                                    className="bg-[#2c2c2c] hover:bg-[#3c3c3c] py-2"
+                                >
+                                    {employee.username}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div>
                         <h3 className='text-sm text-gray-300 mb-0.5'>Category</h3>
